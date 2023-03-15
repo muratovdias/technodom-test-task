@@ -2,10 +2,9 @@ package database
 
 import (
 	"database/sql"
-	"encoding/json"
 	"log"
-	"os"
 	"strings"
+	"sync"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/muratovdias/technodom-test-task/internal/app/models"
@@ -35,17 +34,9 @@ func InitDB() *sql.DB {
 	return db
 }
 
-func InsertData(db *sql.DB) {
-	file, err := os.ReadFile("links.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	var links []models.Link
-	err = json.Unmarshal(file, &links)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func InsertData(db *sql.DB, links []models.Link, wg *sync.WaitGroup) {
+	defer wg.Done()
+	log.Println("links table fill")
 	tx, err := db.Begin()
 	if err != nil {
 		log.Fatal(err)

@@ -37,14 +37,14 @@ func NewAdmin(db *sql.DB) *AdminRepo {
 func (a *AdminRepo) GetLinks(offset int) (*[]models.Link, error) {
 	rows, err := a.db.Query(selectAllLinks, offset)
 	if err != nil {
-		return nil, fmt.Errorf("repository: select all links: %w", err)
+		return nil, fmt.Errorf("repository: admin: select all links: %w", err)
 	}
 	links := make([]models.Link, 0, 25)
 	for rows.Next() {
 		var link models.Link
 		err := rows.Scan(&link.ID, &link.ActiveLink, &link.HistoryLink)
 		if err != nil {
-			return nil, fmt.Errorf("repository: scaning links: %w", err)
+			return nil, fmt.Errorf("repository: admin: scaning links: %w", err)
 		}
 		links = append(links, link)
 	}
@@ -55,7 +55,7 @@ func (a *AdminRepo) GetLinkByID(id int) (models.Link, error) {
 	var link models.Link
 	err := a.db.QueryRow(selectLink, id).Scan(&link.ID, &link.ActiveLink, &link.HistoryLink)
 	if err != nil {
-		return link, fmt.Errorf("repository: select link by id: %w", err)
+		return link, fmt.Errorf("repository: admin: select link by id: %w", err)
 	}
 	return link, nil
 }
@@ -64,15 +64,15 @@ func (a *AdminRepo) UpdateLink(id int, newActiveLink string) error {
 	var newHistoryLink string
 	err := a.db.QueryRow(selectActiveLink, id).Scan(&newHistoryLink)
 	if err != nil {
-		return fmt.Errorf("repository: select active_link by id: %w", err)
+		return fmt.Errorf("repository: admin: select active_link by id: %w", err)
 	}
 	stmt, err := a.db.Prepare(updateActiveLink)
 	if err != nil {
-		return fmt.Errorf("repository: prepare update active_link by id: %w", err)
+		return fmt.Errorf("repository: admin: prepare update active_link by id: %w", err)
 	}
 	_, err = stmt.Exec(newActiveLink, newHistoryLink, id)
 	if err != nil {
-		return fmt.Errorf("repository: exec update active_link by id: %w", err)
+		return fmt.Errorf("repository: admin: exec update active_link by id: %w", err)
 	}
 	return nil
 }
