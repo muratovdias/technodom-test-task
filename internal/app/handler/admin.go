@@ -17,7 +17,6 @@ func (h *Handler) allLinks(w http.ResponseWriter, r *http.Request) {
 	if len(queryPage) == 0 {
 		queryPage = "1"
 	}
-	// fmt.Println(queryPage)
 	page, err := strconv.Atoi(queryPage)
 	if err != nil || page < 1 || strings.TrimSpace(queryPage) == "" {
 		http.Error(w, "Invalid page number", http.StatusBadRequest)

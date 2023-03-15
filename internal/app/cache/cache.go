@@ -2,6 +2,7 @@ package cache
 
 import (
 	"log"
+	"strings"
 	"sync"
 	"time"
 
@@ -53,7 +54,7 @@ func (c *Cache) Add(key, value string) {
 			ActiveLink: value,
 			expire:     time.Now().Add(5 * time.Minute),
 		}
-		if _, ok := c.cache[key]; !ok {
+		if _, ok := c.cache[key]; !ok && strings.TrimSpace(value) != "" {
 			c.cache[key] = newValue
 			log.Println("link added to cache")
 		}

@@ -3,7 +3,6 @@ package service
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"log"
 	"strings"
 
@@ -65,7 +64,7 @@ func (a *AdminService) GetLinkByID(id int) (models.Link, error) {
 
 func (a *AdminService) UpdateLink(id int, newActiveLink string) error {
 	if err := a.repo.UpdateLink(id, newActiveLink); err != nil {
-		fmt.Println("service: " + err.Error())
+		log.Println("service: " + err.Error())
 		if errors.Is(err, sql.ErrNoRows) {
 			return ErrNotFound
 		}
@@ -76,7 +75,7 @@ func (a *AdminService) UpdateLink(id int, newActiveLink string) error {
 
 func (a *AdminService) DeleteLink(id int) error {
 	if err := a.repo.DeleteLink(id); err != nil {
-		fmt.Println("service: " + err.Error())
+		log.Println("service: " + err.Error())
 		if errors.Is(err, sql.ErrNoRows) {
 			return ErrNotFound
 		}
@@ -87,7 +86,8 @@ func (a *AdminService) DeleteLink(id int) error {
 
 func (a *AdminService) CreateLink(newLink string) error {
 	if err := a.repo.CreateLink(newLink); err != nil {
-		if strings.ContainsAny(err.Error(), "UNIQUE constraint failed") {
+		log.Println(err.Error())
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
 			return ErrAlreadyExists
 		}
 		return err

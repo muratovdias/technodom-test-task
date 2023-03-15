@@ -8,12 +8,12 @@ import (
 )
 
 const (
-	selectAllLinks   = `SELECT * FROM links LIMIT 25 OFFSET $2;`
+	selectAllLinks   = `SELECT * FROM links LIMIT 25 OFFSET $1;`
 	selectLink       = `SELECT * FROM links WHERE id=$1;`
 	selectActiveLink = `SELECT active_link FROM links WHERE id=$1;`
 	updateActiveLink = `UPDATE links SET active_link=$1, history_link=$2 WHERE id=$3;`
 	deleteLink       = `DELETE FROM links WHERE id=$1;`
-	createLink       = `INSERT INTO links (active_link) VALUES ($1);`
+	createLink       = `INSERT INTO links (active_link, history_link) VALUES ($1, $2);`
 )
 
 type Admin interface {
@@ -97,11 +97,12 @@ func (a *AdminRepo) DeleteLink(id int) error {
 }
 
 func (a *AdminRepo) CreateLink(newLink string) error {
+	historyLink := ""
 	stmt, err := a.db.Prepare(createLink)
 	if err != nil {
 		return fmt.Errorf("repository: prepare delete row by id: %w", err)
 	}
-	_, err = stmt.Exec(newLink)
+	_, err = stmt.Exec(newLink, historyLink)
 	if err != nil {
 		return fmt.Errorf("repository: exec delete row by id: %w", err)
 	}

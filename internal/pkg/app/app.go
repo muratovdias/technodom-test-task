@@ -54,10 +54,9 @@ func dataFromFile() ([]models.Link, error) {
 	return links, nil
 }
 
-func (app *App) Run() error {
+func (app *App) Run() {
 	log.Println("Server started on port :8787")
 	if err := http.ListenAndServe(":8787", app.handler.InitRoutes()); err != nil {
-		return err
+		log.Fatal(err)
 	}
-	return nil
 }

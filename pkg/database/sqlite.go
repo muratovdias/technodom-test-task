@@ -13,8 +13,8 @@ import (
 const schema = `
 	CREATE TABLE IF NOT EXISTS links(
 		id INTEGER PRIMARY KEY,
-    	active_link TEXT UNIQUE NOT NULL,
-    	history_link TEXT UNIQUE NOT NULL
+    	active_link TEXT UNIQUE,
+    	history_link TEXT UNIQUE
 	)
 `
 
